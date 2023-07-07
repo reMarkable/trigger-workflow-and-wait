@@ -190,11 +190,13 @@ wait_for_workflow_to_finish() {
     workflow=$(api "runs/$last_workflow_id")
     conclusion=$(echo "${workflow}" | jq -r '.conclusion')
     status=$(echo "${workflow}" | jq -r '.status')
-
     echo "Checking conclusion [${conclusion}]"
+    echo "The workflow logs can be found at ${last_workflow_url}"
     echo "Checking status [${status}]"
     echo "conclusion=${conclusion}" >> $GITHUB_OUTPUT
   done
+
+  echo "### [View Test Summary](${last_workflow_url})" >> $GITHUB_STEP_SUMMARY
 
   if [[ "${conclusion}" == "success" && "${status}" == "completed" ]]
   then
